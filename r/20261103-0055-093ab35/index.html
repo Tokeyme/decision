@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" data-sprache="">
+<head>
+  <base href="/r/20261103-0055-093ab35/">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decision Maker</title>
+  <meta name="description" content="Take over a trucking company in 1994 Germany: accept orders, dispatch your trucks, hire drivers. Free in your browser, no sign-up.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E0B08">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #0E0B08;
+      color: #E8D9BE;
+      font-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial,
+        "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+    }
+    /* Liegt über allem, bis das Spiel sein erstes Bild gezeichnet hat — und
+       zwar mit Schrift (26.10.2026: auf Japanisch kommt die Schrift erst nach
+       dem Start; bis dahin steht hier „読み込み中…“ statt einer leeren
+       Fläche). */
+    .vorhang {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      box-sizing: border-box;
+      background: #0E0B08;
+    }
+    .kasten { max-width: 30rem; text-align: center; }
+    .kasten[hidden] { display: none; }
+    .name {
+      margin: 0 0 1rem;
+      color: #D9A441;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .leise { color: #9C8B76; }
+    h1 { margin: 0 0 0.75rem; color: #D9A441; font-size: 1.4rem; }
+    p { line-height: 1.5; }
+    button {
+      margin-top: 0.75rem;
+      padding: 0.7rem 1.4rem;
+      border: 2px solid #D9A441;
+      background: #241D17;
+      color: #D9A441;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:focus-visible { outline: 2px solid #E8D9BE; outline-offset: 3px; }
+    /* Impressum und Datenschutz bleiben auch über dem Spiel erreichbar —
+       klein, oben rechts. */
+    .recht {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      padding: 2px 8px;
+      background: rgba(14, 11, 8, 0.55);
+      font-size: 11px;
+      color: #9C8B76;
+    }
+    .recht a { color: #9C8B76; text-decoration: none; }
+    .recht a:hover, .recht a:focus-visible { color: #E8D9BE; text-decoration: underline; }
+    /* **Der Hinweis auf generierte Bilder und Musik** (Andreas, 26.10.2026:
+       „ja, aber nicht aufdringlich und erst recht nicht überall; kann es auch
+       ‚generiert‘ nennen“). Genau eine Zeile, nur hier im Vorhang — beim Laden
+       und auf dem Hinweis für kleine Bildschirme —, nicht im Spiel und nicht
+       in der ständigen Rechtsleiste. */
+    .ki {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 12px;
+      margin: 0;
+      padding: 0 16px;
+      text-align: center;
+      font-size: 11px;
+      color: #6E6152;
+    }
+    /* **„Lädt nicht? Neu laden“** — erst nach einer Minute ohne Spiel
+       (siehe starten()), so leise wie der Ladetext darüber. */
+    .haengt button {
+      margin: 0 0 0 0.3em;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .haengt button:hover, .haengt button:focus-visible { color: #E8D9BE; }
+    /* Nach dem japanischen ？ (volle Breite) kein Abstand mehr. */
+    :lang(ja) .haengt button { margin-left: 0; }
+  </style>
+</head>
+<body>
+  <div class="vorhang" id="vorhang">
+    <div class="kasten" id="laden">
+      <p class="name" id="name">Decision Maker</p>
+      <p class="leise" id="laden-text">Loading…</p>
+      <p class="leise haengt" id="haengt" hidden><span id="haengt-frage">Not loading?</span><button type="button" id="neu-laden">Reload</button></p>
+    </div>
+    <div class="kasten" id="hinweis" hidden>
+      <p class="name" id="hinweis-name">Decision Maker</p>
+      <h1 id="hinweis-titel">Best played on a computer</h1>
+      <p id="hinweis-text">Decision Maker is made for a large screen and a mouse. On a phone, things get cramped — it's more fun on a computer.</p>
+      <button type="button" id="trotzdem">Play anyway</button>
+      <p class="leise" id="adresse"></p>
+    </div>
+    <p class="ki" id="ki">Generated artwork and music</p>
+  </div>
+  <nav class="recht" id="recht">
+    <a id="impressum" href="https://amapps.app/impressum.html" target="_blank" rel="noopener">Legal notice</a>
+    ·
+    <a id="datenschutz" href="https://amapps.app/en/entscheider/privacy/web/" target="_blank" rel="noopener">Privacy</a>
+  </nav>
+  <noscript>
+    <div class="vorhang"><div class="kasten"><p id="ohne-skript">Decision Maker needs JavaScript.</p></div></div>
+  </noscript>
+  <script type="application/json" id="seitentexte">
+  {
+    "de": {
+      "name": "Entscheider",
+      "laden": "Lädt …",
+      "hinweisTitel": "Am besten am Computer",
+      "hinweis": "Entscheider ist für einen großen Bildschirm und eine Maus gemacht. Auf dem Telefon wird es eng — am Computer macht es mehr Spaß.",
+      "trotzdem": "Trotzdem spielen",
+      "ki": "Bilder und Musik generiert",
+      "impressum": "Impressum",
+      "datenschutz": "Datenschutz",
+      "datenschutzAdresse": "https://amapps.app/entscheider/privacy/web/",
+      "ohneSkript": "Entscheider braucht JavaScript.",
+      "haengt": "Lädt nicht?",
+      "neuLaden": "Neu laden"
+    },
+    "en": {
+      "name": "Decision Maker",
+      "laden": "Loading…",
+      "hinweisTitel": "Best played on a computer",
+      "hinweis": "Decision Maker is made for a large screen and a mouse. On a phone, things get cramped — it's more fun on a computer.",
+      "trotzdem": "Play anyway",
+      "ki": "Generated artwork and music",
+      "impressum": "Legal notice",
+      "datenschutz": "Privacy",
+      "datenschutzAdresse": "https://amapps.app/en/entscheider/privacy/web/",
+      "ohneSkript": "Decision Maker needs JavaScript.",
+      "haengt": "Not loading?",
+      "neuLaden": "Reload"
+    },
+    "fr": {
+      "name": "Le Décideur",
+      "laden": "Chargement…",
+      "hinweisTitel": "À jouer de préférence sur ordinateur",
+      "hinweis": "Le Décideur est conçu pour un grand écran et une souris. Sur téléphone, on est vite à l'étroit — c'est plus agréable sur ordinateur.",
+      "trotzdem": "Jouer quand même",
+      "ki": "Images et musique générées",
+      "impressum": "Mentions légales",
+      "datenschutz": "Confidentialité",
+      "datenschutzAdresse": "https://amapps.app/en/entscheider/privacy/web/",
+      "ohneSkript": "Le Décideur nécessite JavaScript.",
+      "haengt": "Ça ne charge pas ?",
+      "neuLaden": "Recharger"
+    },
+    "es": {
+      "name": "El Decisor",
+      "laden": "Cargando…",
+      "hinweisTitel": "Mejor en el ordenador",
+      "hinweis": "El Decisor está pensado para una pantalla grande y un ratón. En el móvil, la pantalla se queda pequeña. En el ordenador se disfruta más.",
+      "trotzdem": "Jugar de todos modos",
+      "ki": "Imágenes y música generadas",
+      "impressum": "Aviso legal",
+      "datenschutz": "Privacidad",
+      "datenschutzAdresse": "https://amapps.app/en/entscheider/privacy/web/",
+      "ohneSkript": "El Decisor necesita JavaScript.",
+      "haengt": "¿No carga?",
+      "neuLaden": "Recargar"
+    },
+    "ja": {
+      "name": "決断者",
+      "laden": "読み込み中…",
+      "hinweisTitel": "パソコンでのプレイがおすすめです",
+      "hinweis": "「決断者」は、大きな画面とマウスで遊ぶことを前提に作られています。スマートフォンでは画面が窮屈になります。パソコンのほうが快適に遊べます。",
+      "trotzdem": "このまま遊ぶ",
+      "ki": "画像と音楽は生成されたものです",
+      "impressum": "運営者情報",
+      "datenschutz": "プライバシーポリシー",
+      "datenschutzAdresse": "https://amapps.app/en/entscheider/privacy/web/",
+      "ohneSkript": "「決断者」を遊ぶにはJavaScriptが必要です。",
+      "haengt": "読み込めませんか？",
+      "neuLaden": "再読み込み"
+    }
+  }
+  </script>
+  <script>
+    // **Einstieg** (26.10.2026): Texte in der Sprache der Seite, der Hinweis
+    // für kleine Bildschirme, dann das Spiel.
+    (function () {
+      'use strict';
+
+      // Die Texte je Sprache stehen oben im Block „seitentexte“ — aus ihm
+      // setzt auch tools/web_bauen.dart die festen Texte der Sprachseiten.
+      var TEXTE = JSON.parse(document.getElementById('seitentexte').textContent);
+
+      // Die Sprachseiten tragen ihre Sprache (data-sprache). Der Bauordner
+      // selbst und `flutter run` nehmen die des Browsers — wie das Spiel:
+      // die erste aus der Wunschliste, die es gibt, sonst Englisch.
+      function spracheDerSeite() {
+        var fest = document.documentElement.getAttribute('data-sprache');
+        if (fest && TEXTE[fest]) return fest;
+        var liste = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || 'en'];
+        for (var i = 0; i < liste.length; i++) {
+          var kurz = String(liste[i]).toLowerCase().split('-')[0];
+          if (TEXTE[kurz]) return kurz;
+        }
+        return 'en';
+      }
+
+      function setzen(id, text) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = text;
+      }
+
+      // Alle Texte der Seite in einer Sprache — beim Start und wenn der
+      // Spieler im Spiel die Sprache wechselt.
+      function anwenden(sprache) {
+        var t = TEXTE[sprache];
+        document.documentElement.lang = sprache;
+        setzen('name', t.name);
+        setzen('hinweis-name', t.name);
+        setzen('laden-text', t.laden);
+        setzen('hinweis-titel', t.hinweisTitel);
+        setzen('hinweis-text', t.hinweis);
+        setzen('trotzdem', t.trotzdem);
+        setzen('ki', t.ki);
+        setzen('haengt-frage', t.haengt);
+        setzen('neu-laden', t.neuLaden);
+        setzen('impressum', t.impressum);
+        setzen('datenschutz', t.datenschutz);
+        document.getElementById('datenschutz').href = t.datenschutzAdresse;
+      }
+      anwenden(spracheDerSeite());
+      setzen('adresse', location.host);
+
+      // **Ruft das Spiel, wenn es die Sprache wechselt** (lib/ui/ablage_web.dart,
+      // 26.10.2026). Den Pfad (/de/ → /fr/) hat es da schon per replaceState
+      // umgeschrieben; hier folgen Sprache der Seite (Vorlesen, Glyphenformen
+      // der Kanji), Rechtslinks und Datenschutz-Adresse.
+      window.entscheiderSpracheGesetzt = function (sprache) {
+        if (!TEXTE[sprache]) return;
+        if (document.documentElement.getAttribute('data-sprache')) {
+          document.documentElement.setAttribute('data-sprache', sprache);
+        }
+        anwenden(sprache);
+      };
+
+      // **Kleine Bildschirme** (26.10.2026): Das Spiel ist für große
+      // Bildschirme gemalt. Unter 900 Pixeln Breite oder auf einem Telefon
+      // (nur grober Zeiger, kurze Kante unter 600) erst ein Hinweis — und
+      // zwar VOR dem Laden: Wer es lässt, hat nicht schon Megabytes geladen.
+      // „Trotzdem spielen“ merkt sich der Browser.
+      var MERKER = 'entscheider.web.trotzdem';
+      function gemerkt() {
+        try { return localStorage.getItem(MERKER) === '1'; } catch (e) { return false; }
+      }
+      function merken() {
+        try { localStorage.setItem(MERKER, '1'); } catch (e) { /* privates Fenster */ }
+      }
+      function kleinerBildschirm() {
+        var breite = document.documentElement.clientWidth || window.innerWidth || 0;
+        if (breite > 0 && breite < 900) return true;
+        try {
+          var nurGrob = window.matchMedia('(pointer: coarse)').matches &&
+            !window.matchMedia('(any-pointer: fine)').matches;
+          return nurGrob && Math.min(screen.width, screen.height) < 600;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // **Scheitert der Start schon vor dem Spiel** (Browser-Prüfer
+      // 26.10.2026: Engine-Start, WebAssembly gesperrt, Skriptfehler), bliebe
+      // „Lädt …“ für immer stehen — die Frist unten (entscheiderLaeuft) läuft
+      // erst nach runApp an. Deshalb: Hat das Spiel sich nach einer Minute
+      // nicht gemeldet, bietet der Vorhang leise das Neuladen an. Geladen
+      // wird weiter; auf einer langsamen Leitung kommt das Spiel trotzdem.
+      var STARTFRIST = 60000;
+      function haengtPruefen() {
+        if (typeof window.entscheiderLaeuftUm === 'number') return;
+        var zeile = document.getElementById('haengt');
+        if (zeile) zeile.hidden = false;
+      }
+      document.getElementById('neu-laden').addEventListener('click', function () {
+        location.reload();
+      });
+
+      var gestartet = false;
+      function starten() {
+        if (gestartet) return;
+        gestartet = true;
+        document.getElementById('hinweis').hidden = true;
+        document.getElementById('laden').hidden = false;
+        setTimeout(haengtPruefen, STARTFRIST);
+        var skript = document.createElement('script');
+        skript.src = 'flutter_bootstrap.js';
+        skript.async = true;
+        document.body.appendChild(skript);
+      }
+
+      // **Der Vorhang fällt, wenn das erste Bild MIT Schrift steht** — das
+      // meldet das Spiel selbst (lib/ui/schrift.dart, SchriftTor). Auf
+      // Japanisch wartet es auf seine Schrift; vorher stünde hier nur eine
+      // leere dunkle Fläche.
+      // `wer` steht für tools/web_probe.dart da: Fiel der Vorhang durch das
+      // Spiel oder erst durch die Frist?
+      window.entscheiderBereit = function (wer) {
+        if (!window.entscheiderBereitUm) {
+          window.entscheiderBereitUm = performance.now();
+          window.entscheiderBereitDurch = wer || 'spiel';
+        }
+        var vorhang = document.getElementById('vorhang');
+        if (vorhang) vorhang.remove();
+      };
+      // Ruft flutter_bootstrap.js, sobald runApp durch ist. Meldet sich das
+      // Spiel danach nicht (Fehler im Spiel), fällt der Vorhang trotzdem —
+      // nach mehr als der Frist, die das Spiel auf die japanische Schrift
+      // wartet (10 s): Ein Spiel mit Kästchen ist besser als gar keins.
+      window.entscheiderLaeuft = function () {
+        window.entscheiderLaeuftUm = performance.now();
+        setTimeout(function () { window.entscheiderBereit('frist'); }, 15000);
+      };
+
+      if (kleinerBildschirm() && !gemerkt()) {
+        document.getElementById('laden').hidden = true;
+        document.getElementById('hinweis').hidden = false;
+        document.getElementById('trotzdem').addEventListener('click', function () {
+          merken();
+          starten();
+        });
+      } else {
+        starten();
+      }
+    })();
+  </script>
+</body>
+</html>

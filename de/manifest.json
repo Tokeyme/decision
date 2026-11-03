@@ -1,0 +1,38 @@
+{
+  "name": "Entscheider",
+  "short_name": "Entscheider",
+  "id": "/de/",
+  "start_url": "/de/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0E0B08",
+  "theme_color": "#0E0B08",
+  "description": "Übernehmen Sie eine Spedition im Deutschland des Jahres 1994: Aufträge annehmen, Lastzüge losschicken, Fahrer einstellen. Kostenlos im Browser, ohne Anmeldung.",
+  "orientation": "landscape",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/Icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "lang": "de"
+}

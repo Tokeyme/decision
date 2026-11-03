@@ -1,0 +1,38 @@
+{
+  "name": "Le Décideur",
+  "short_name": "Le Décideur",
+  "id": "/fr/",
+  "start_url": "/fr/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0E0B08",
+  "theme_color": "#0E0B08",
+  "description": "Prenez la tête d'une entreprise de transport dans l'Allemagne de 1994 : acceptez des commandes, envoyez vos camions, embauchez des chauffeurs. Gratuit sur navigateur, sans inscription.",
+  "orientation": "landscape",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/Icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "lang": "fr"
+}

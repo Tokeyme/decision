@@ -1,0 +1,38 @@
+{
+  "name": "決断者",
+  "short_name": "決断者",
+  "id": "/ja/",
+  "start_url": "/ja/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0E0B08",
+  "theme_color": "#0E0B08",
+  "description": "1994年のドイツで、運送会社を引き継ぎましょう。注文を受け、トラックを送り出し、運転手を雇います。ブラウザで無料で遊べて、登録も不要です。",
+  "orientation": "landscape",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/Icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/Icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "lang": "ja"
+}
