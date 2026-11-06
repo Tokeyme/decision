@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja" data-sprache="ja">
 <head>
-  <base href="/r/20261106-0312-899bd7d/">
+  <base href="/r/20261106-0347-59665a9/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -395,6 +395,26 @@
               }).catch(function () { /* abgelehnt: bleibt, wie es ist */ });
             }
           } catch (e) { /* alter Browser */ }
+          // **Den Ton schon jetzt freischalten** (06.11.2026): Safari gibt
+          // ihn je Audio-Element frei und nur in einer Geste — dieser Tipp
+          // ist eine. Das Element übernimmt das Spiel (lib/ui/ton_web.dart),
+          // so spielt das Radio gleich, ohne einen weiteren Tipp.
+          try {
+            var ton = new Audio();
+            ton.style.display = 'none';
+            document.body.appendChild(ton);
+            window.entscheiderTon = ton;
+            var versuch = ton.play();
+            ton.pause();
+            if (versuch && versuch.then) {
+              versuch.then(function () { window.entscheiderTonFrei = true; },
+                function (e) {
+                  if (!e || e.name !== 'NotAllowedError') {
+                    window.entscheiderTonFrei = true;
+                  }
+                });
+            }
+          } catch (e) { /* ohne Ton weiter */ }
           starten();
         });
       } else {
