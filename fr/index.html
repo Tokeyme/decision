@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" data-sprache="fr">
 <head>
-  <base href="/r/20261106-0347-59665a9/">
+  <base href="/r/20261108-0425-d6dff46/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -133,7 +133,7 @@
     /* Nach dem japanischen ？ (volle Breite) kein Abstand mehr. */
     :lang(ja) .haengt button { margin-left: 0; }
   </style>
-  <script>(function () {if (location.hash.indexOf("#umzug=") === 0) return;var s = document.createElement('script');s.defer = true;s.src = "https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute('data-cf-beacon', "{\"token\":\"ad27dea9ff904a3ea94d1cb51e471174\",\"spa\":false}");document.head.appendChild(s);})();</script>
+  <script>(function () {if (location.hash.indexOf("#umzug=") === 0) return;var s = document.createElement('script');s.defer = true;s.src = "https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute('data-cf-beacon', "{\"token\":\"ad27dea9ff904a3ea94d1cb51e471174\",\"spa\":false}");document.head.appendChild(s);var los = false;function losgespielt(e) {if (los || !window.entscheiderBereitUm) return;if (e.target && e.target.closest && e.target.closest('#recht')) return;var p = location.pathname.split('/');if (["de","en","fr","es","ja"].indexOf(p[1]) < 0) return;los = true;removeEventListener('pointerdown', losgespielt, true);var f = document.createElement('iframe');f.hidden = true;f.tabIndex = -1;f.setAttribute('aria-hidden', 'true');f.referrerPolicy = 'origin';f.src = '/' + p[1] + (p[2] === "a" ? '/a' : '') + '/los/';document.body.appendChild(f);}addEventListener('pointerdown', losgespielt, true);})();</script>
 </head>
 <body>
   <div class="vorhang" id="vorhang">
