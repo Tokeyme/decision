@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-sprache="">
 <head>
-  <base href="/r/20261106-0312-899bd7d/">
+  <base href="/r/20261114-0901-ecf035f/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,16 +42,44 @@
        Adresszeile). */
     .kasten { max-width: 30rem; text-align: center; margin: auto 0; }
     .kasten[hidden] { display: none; }
+    /* **Der Kasten bleibt mittig, der Fuß unten** (10.11.2026): Oben ein
+       Abstandhalter, unten der Fuß („Worum es geht“ und KI-Zeile) — beide
+       teilen sich den freien Platz zu gleichen Teilen. Braucht der Fuß mehr
+       als seine Hälfte, rückt der Kasten nur so weit hoch wie nötig; reicht
+       der Schirm nicht, beginnt alles oben und rollt. */
+    #vorhang::before { content: ''; flex: 1 1 0; }
+    .fuss {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    /* Der Spielname ist die Überschrift der Seite (h1, 10.11.2026 — für
+       Suchmaschinen), „Am Handy: bitte quer“ die zweite (h2). Aussehen wie
+       zuvor als Absatz: Zeilenhöhe hier von Hand. */
     .name {
       margin: 0 0 1rem;
       color: #D9A441;
       font-size: 1.6rem;
       font-weight: 700;
       letter-spacing: 0.08em;
+      line-height: 1.5;
     }
     .leise { color: #9C8B76; }
-    h1 { margin: 0 0 0.75rem; color: #D9A441; font-size: 1.4rem; }
+    .kasten h2 { margin: 0 0 0.75rem; color: #D9A441; font-size: 1.4rem; }
     p { line-height: 1.5; }
+    /* **Worum es geht** (10.11.2026): Die Suchmaschine sah bisher nur den
+       Hinweis für kleine Bildschirme — das Spiel zeichnet auf Canvas. Ruhig
+       unter dem Kasten, beim Laden und unter dem Hinweis. */
+    .ueber {
+      flex-shrink: 0;
+      max-width: 30rem;
+      margin: 1rem 0 0;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #9C8B76;
+    }
     button {
       margin-top: 0.75rem;
       padding: 0.7rem 1.4rem;
@@ -92,10 +120,12 @@
     /* Niedrige Schirme (Handy quer): etwas dichter, damit alles hineinpasst. */
     @media (max-height: 420px) {
       .vorhang { padding: 8px 16px; }
-      .name { margin-bottom: 0.4rem; font-size: 1.3rem; }
-      h1 { margin-bottom: 0.4rem; font-size: 1.2rem; }
+      .name { margin-bottom: 0.4rem; font-size: 1.3rem; line-height: 1.35; }
+      .kasten h2 { margin-bottom: 0.4rem; font-size: 1.2rem; }
       p { margin: 0.4em 0; line-height: 1.35; }
       button { margin-top: 0.3rem; }
+      /* Quer am Handy zählt jede Zeile: Hier bleibt es beim Kasten. */
+      .ueber { display: none; }
     }
     /* **„Lädt nicht? Neu laden“** — erst nach einer Minute ohne Spiel
        (siehe starten()), so leise wie der Ladetext darüber. */
@@ -117,18 +147,21 @@
 <body>
   <div class="vorhang" id="vorhang">
     <div class="kasten" id="laden">
-      <p class="name" id="name">Decision Maker</p>
+      <h1 class="name" id="name">Decision Maker</h1>
       <p class="leise" id="laden-text">Loading…</p>
       <p class="leise haengt" id="haengt" hidden><span id="haengt-frage">Not loading?</span><button type="button" id="neu-laden">Reload</button></p>
     </div>
     <div class="kasten" id="hinweis" hidden>
-      <p class="name" id="hinweis-name">Decision Maker</p>
-      <h1 id="hinweis-titel">On a phone: turn it sideways</h1>
+      <h1 class="name" id="hinweis-name">Decision Maker</h1>
+      <h2 id="hinweis-titel">On a phone: turn it sideways</h2>
       <p id="hinweis-text">Decision Maker is made for a large screen. On a phone, play it in landscape — though it's most comfortable to play on a computer.</p>
       <button type="button" id="trotzdem">Play</button>
       <p class="leise" id="adresse"></p>
     </div>
-    <p class="ki" id="ki">Generated artwork and music</p>
+    <div class="fuss">
+      <p class="ueber" id="ueber">Decision Maker is a calm management sim: in 1994 you take over a small trucking company in Stuttgart, Germany, and run it from the office. You take on orders, send out trucks, hire drivers, expand your fleet and keep an eye on your cash — you never sit behind the wheel. A free browser game, no sign-up.</p>
+      <p class="ki" id="ki">Generated artwork and music</p>
+    </div>
   </div>
   <nav class="recht" id="recht">
     <a id="impressum" href="https://amapps.app/impressum.html" target="_blank" rel="noopener">Legal notice</a>
@@ -145,6 +178,7 @@
       "laden": "Lädt …",
       "hinweisTitel": "Am Handy: bitte quer",
       "hinweis": "Entscheider ist für einen großen Bildschirm gemacht. Am Handy spielt man es quer — am bequemsten ist es am Computer.",
+      "ueber": "Entscheider ist eine ruhige Wirtschaftssimulation: Sie übernehmen 1994 in Stuttgart eine kleine Spedition und führen sie vom Büro aus. Sie nehmen Aufträge an, schicken Lastzüge los, stellen Fahrer ein, kaufen neue Lkw und behalten die Kasse im Blick — selbst am Steuer sitzen Sie nie. Ein kostenloses Browserspiel, ganz ohne Anmeldung.",
       "trotzdem": "Spielen",
       "ki": "Bilder und Musik generiert",
       "impressum": "Impressum",
@@ -159,6 +193,7 @@
       "laden": "Loading…",
       "hinweisTitel": "On a phone: turn it sideways",
       "hinweis": "Decision Maker is made for a large screen. On a phone, play it in landscape — though it's most comfortable to play on a computer.",
+      "ueber": "Decision Maker is a calm management sim: in 1994 you take over a small trucking company in Stuttgart, Germany, and run it from the office. You take on orders, send out trucks, hire drivers, expand your fleet and keep an eye on your cash — you never sit behind the wheel. A free browser game, no sign-up.",
       "trotzdem": "Play",
       "ki": "Generated artwork and music",
       "impressum": "Legal notice",
@@ -173,6 +208,7 @@
       "laden": "Chargement…",
       "hinweisTitel": "Sur téléphone : à l'horizontale",
       "hinweis": "Le Décideur est conçu pour un grand écran. Sur téléphone, jouez-y à l'horizontale — c'est sur ordinateur qu'il est le plus confortable.",
+      "ueber": "Le Décideur est un jeu de gestion paisible : en 1994, vous reprenez une petite entreprise de transport routier à Stuttgart et la dirigez depuis votre bureau. Acceptez des commandes, faites partir vos camions, recrutez des chauffeurs, agrandissez votre flotte et surveillez votre trésorerie, sans jamais prendre le volant. Un jeu gratuit, sur navigateur et sans inscription.",
       "trotzdem": "Jouer",
       "ki": "Images et musique générées",
       "impressum": "Mentions légales",
@@ -187,6 +223,7 @@
       "laden": "Cargando…",
       "hinweisTitel": "En el móvil: en horizontal",
       "hinweis": "El Decisor está pensado para una pantalla grande. En el móvil se juega en horizontal — lo más cómodo es jugarlo en el ordenador.",
+      "ueber": "El Decisor es un juego de gestión tranquilo: en 1994 te pones al frente de una pequeña empresa de transportes en Stuttgart y la diriges desde tu despacho. Acepta pedidos, pon tus camiones en ruta, contrata conductores, amplía tu flota y vigila la caja, sin ponerte nunca al volante. Juego de navegador gratis, sin registro.",
       "trotzdem": "Jugar",
       "ki": "Imágenes y música generadas",
       "impressum": "Aviso legal",
@@ -201,6 +238,7 @@
       "laden": "読み込み中…",
       "hinweisTitel": "スマートフォンでは横向きで",
       "hinweis": "「決断者」は大きな画面向けに作られています。スマートフォンでは横向きにして遊んでください。いちばん快適なのはパソコンです。",
+      "ueber": "「決断者」は、ゆったり遊べる経営シミュレーションです。1994年のシュトゥットガルトで運送会社を引き継ぎ、社長室で注文を受け、トラックを送り出し、資金を管理します。自分では運転しません。無料・登録不要のブラウザゲームです。",
       "trotzdem": "遊ぶ",
       "ki": "画像と音楽は生成されたものです",
       "impressum": "運営者情報",
@@ -253,6 +291,7 @@
         setzen('hinweis-titel', t.hinweisTitel);
         setzen('hinweis-text', t.hinweis);
         setzen('trotzdem', t.trotzdem);
+        setzen('ueber', t.ueber);
         setzen('ki', t.ki);
         setzen('haengt-frage', t.haengt);
         setzen('neu-laden', t.neuLaden);
@@ -374,6 +413,26 @@
               }).catch(function () { /* abgelehnt: bleibt, wie es ist */ });
             }
           } catch (e) { /* alter Browser */ }
+          // **Den Ton schon jetzt freischalten** (06.11.2026): Safari gibt
+          // ihn je Audio-Element frei und nur in einer Geste — dieser Tipp
+          // ist eine. Das Element übernimmt das Spiel (lib/ui/ton_web.dart),
+          // so spielt das Radio gleich, ohne einen weiteren Tipp.
+          try {
+            var ton = new Audio();
+            ton.style.display = 'none';
+            document.body.appendChild(ton);
+            window.entscheiderTon = ton;
+            var versuch = ton.play();
+            ton.pause();
+            if (versuch && versuch.then) {
+              versuch.then(function () { window.entscheiderTonFrei = true; },
+                function (e) {
+                  if (!e || e.name !== 'NotAllowedError') {
+                    window.entscheiderTonFrei = true;
+                  }
+                });
+            }
+          } catch (e) { /* ohne Ton weiter */ }
           starten();
         });
       } else {
